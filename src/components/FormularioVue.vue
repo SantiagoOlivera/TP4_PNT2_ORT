@@ -2,9 +2,14 @@
 
   <section class="src-components-formulario-vue">
 
-    <h1>Formulario Vue (Avanzado) TP4</h1>
+    <h1>Vue Form TP7</h1>
+
+
       <div class="container">
-        <vue-form :state="formstate" @submit.prevent="enviar()" class="row" >
+
+       
+
+        <vue-form ref="form" :state="formstate" @submit.prevent="enviar()" class="row" >
           
             <validate tag="label" class="col-lg-12 text-left">
               <span>Nombre*</span>
@@ -27,7 +32,7 @@
               <div slot="minlength" class="text-danger" >(*) Nombre debe tener al menos {{MIN_NOMBRE_LENGTH}} caracteres</div>
               <div slot="test" class="text-danger">(*) Nombre no debe superar los {{MAX_NOMBRE_LENGTH}} caracteres</div> 
             </field-messages>
-            <p>Cant. disponibles: {{ MAX_NOMBRE_LENGTH - formData.nombre.length}}</p>
+            <p>Cant. disponibles: {{ formData.nombre ? MAX_NOMBRE_LENGTH - formData.nombre.length : ''}}</p>
           </validate>
 
 
@@ -76,7 +81,7 @@
             </field-messages>
 
           </validate>
-          
+
           <div class="col-lg-12">
             <button type="submit" class="btn btn-success float-right" :disabled="formstate.$invalid">Enviar</button>
           </div>
@@ -103,13 +108,7 @@
   export default  {
     name: 'src-components-formulario-vue',
     props: [],
-      /*  formData: {
-          nombre: null,
-          edad: null,
-          email: null,
-      }, */
     mounted () {
-
     },
     data(){
       return {
@@ -118,37 +117,53 @@
         MIN_EDAD: 18,
         MAX_EDAD: 120,
         formstate: {},
-        formData: {
-          nombre: '',
-          email: null,
-          edad: null
-        }
+        formData: this.defaultForm(),
+         API_URL: "https://6366f216f5f549f052ce96e7.mockapi.io/TP_PNT2_ORT/TP7",
       }
     },
     methods: {
-      enviar: function(){
-        console.log("Enviar", {...this.formData} );
-        this.formstate._reset();
-      },
-      isMaxCaracteres(value, max){
-        var rta = 0
-        if(value){
-          return value.toString().length < max
-        }
-        return rta;
-      },
-      /* getInitialData: function(){
-        
-        return this.formData = {
+      defaultForm(){
+        return {
           nombre: null,
-          edad: null,
           email: null,
+          edad: null
         }
+      },
+      enviar: function(){
         
-      }, */
+        var data = {...this.formData} 
+        console.log("Enviar", data);
+
+        //USANDO THEN AND CATCH
+        /* this.axios.post(this.API_URL, data)
+          .then( () => { 
+            this.recargar();
+          })
+          .catch(error => console.log(error)); */
+
+        
+        //USANDO ASYNC AND AWAIT
+        this.guardar(data);
+        
+      },
+      async guardar(data){
+        try{
+          var res = await this.axios.post(this.API_URL, data,  { 'content-type' : 'application/json' });
+          console.log(res);
+          console.log(res, data);
+          this.recargar(); 
+        }catch(e){
+          console.error(e);
+        }
+      },
+      recargar(){
+          this.$refs.form.reset();
+          this.formData = this.defaultForm();
+          //this.formstate._reset();
+      },
     },
     computed: {
-
+      
     }
 }
 

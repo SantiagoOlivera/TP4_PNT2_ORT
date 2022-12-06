@@ -9,13 +9,10 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <router-link class="nav-link" to="formulario">Formulario Comun TP4</router-link>
+            <router-link class="nav-link" to="formulario-vue">Formulario Vue</router-link>
           </li>
           <li class="nav-item active">
-            <router-link class="nav-link" to="formulario-vue">Formulario Vue TP4</router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link class="nav-link" to="api">API MockAPI TP4</router-link>
+            <router-link class="nav-link" to="alert-usuario">Alert usuarios</router-link>
           </li>
         </ul>
       </div>
